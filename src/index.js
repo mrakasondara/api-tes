@@ -32,7 +32,10 @@ app.post('/register', async (req,res)=>{
 
 app.get('/post', async(req,res)=>{
 	mongoose.connect("mongodb+srv://rakasondara21:rakasondara21@project.ezg1faq.mongodb.net/?retryWrites=true&w=majority")
-	res.json(await Post.find())
+	res.json(await Post.find()
+        .populate('author',['username'])
+        .sort({createdAt: -1})
+        .limit(20))
 })
 
 app.get('/highlight', async (req,res)=>{
