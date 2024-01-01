@@ -1,7 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
-// const multer = require('multer')
+const multer = require('multer')
 const app = express()
 const Post = require('../Post')
 const User = require('../User')
