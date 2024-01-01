@@ -35,6 +35,12 @@ app.get('/post', async(req,res)=>{
 	res.json(await Post.find())
 })
 
+app.get('/highlight', async (req,res)=>{
+    mongoose.connect("mongodb+srv://rakasondara21:rakasondara21@project.ezg1faq.mongodb.net/?retryWrites=true&w=majority")
+    const posts = await Post.find().populate('author',['username'])
+    res.json(posts)
+})
+
 app.listen(port, ()=>{
     console.log(`App Listening on Port ${port}`)
 })
