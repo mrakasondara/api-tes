@@ -8,7 +8,7 @@ const User = require('../User')
 const port = process.env.PORT || 4000
 
 app.use(cors({credentials: true, origin: 'https://blog-titik-game.vercel.app'}))
-// const uploadMiddleware = multer({dest: 'uploads/'})
+const uploadMiddleware = multer({dest: 'uploads/'})
 app.use(express.json())
 // app.use('/uploads', express.static(__dirname + '/uploads'));
 
