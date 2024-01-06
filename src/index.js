@@ -45,8 +45,8 @@ app.get('/highlight', async (req,res)=>{
 })
 
 app.post('/upload', async(req,res)=>{
-    const {originalName} = req.file
-    res.json(originalName)
+    const {originalname} = req.file
+    res.json(originalname)
 })
 
 app.listen(port, ()=>{
