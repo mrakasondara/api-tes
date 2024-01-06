@@ -128,6 +128,7 @@ app.post('/createpost', upload.single('file') ,(req,res)=>{
         const ext = parts[parts.length - 1]
         const lowerExt = ext.toLowerCase()
         let postDoc
+        const {title,summary,tag,content} = req.body
         const {token} = req.cookies
         switch(lowerExt){
             case 'jpg':
