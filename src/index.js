@@ -9,10 +9,18 @@ const Post = require('../Post')
 const User = require('../User')
 const port = process.env.PORT || 4000
 
-app.use(cors({credentials: true, origin: 'https://blog-titik-game.vercel.app'}))
-// const uploadMiddleware = multer({dest: 'uploads/'})
+// app.use(cors({credentials: true, origin: 'https://blog-titik-game.vercel.app'}))
+app.use(cors({credentials: true, origin: 'http://localhost:5173'}))
 app.use(express.json())
-app.use('/uploads', express.static(__dirname + '/uploads'));
+app.use(cookieParser())
+
+const storage = multer.diskStorage({
+    filename: function(req,file,cb){
+        cb(null, file.originalname)
+    }
+})
+
+const upload = multer({storage:storage})
 
 cloudinary.config({
     cloud_name:'dxs0jt3xe',
@@ -20,9 +28,6 @@ cloudinary.config({
     api_secret:'DuGN2Yq0sYUfzvCDnAQf9nLhIV4',
 })
 
-app.get('/get', (req,res)=>{
-	res.send('teessssssss')
-})
 
 app.post('/register', async (req,res)=>{
 	mongoose.connect("mongodb+srv://rakasondara21:rakasondara21@project.ezg1faq.mongodb.net/?retryWrites=true&w=majority")
@@ -35,6 +40,46 @@ app.post('/register', async (req,res)=>{
         console.log(e)
         res.status(400).json(e)
     }
+})
+
+app.post('/login',async (req,res)=>{
+    const {username,password} = req.body
+    mongoose.connect("mongodb+srv://rakasondara21:rakasondara21@project.ezg1faq.mongodb.net/?retryWrites=true&w=majority")
+    const loginCheck = await User.findOne({username})
+    if(loginCheck === null){
+        res.status(400).json()
+        // console.log('user not found')
+    }else{
+        const passOk = bcrypt.compareSync(password,loginCheck.password)
+        if(passOk){
+            jwt.sign({username, id:loginCheck._id},secret,{}, (err,token)=>{
+                if(err)throw(err)
+                res.cookie('token',token).json({
+                    id: loginCheck._id,
+                    username
+                })
+            })
+        }else{
+            res.status(400).json()
+        }
+    }
+
+})
+
+
+app.get('/profile', (req,res)=>{
+    const {token} = req.cookies
+    if(token){
+        jwt.verify(token,secret,{},(err,info)=>{
+            if(err)throw err
+            res.json(info)
+        } )
+    }
+})
+
+app.post('/logout', (req,res)=>{
+    res.cookie('token','').json('logout')
+
 })
 
 app.get('/post', async(req,res)=>{
@@ -51,11 +96,58 @@ app.get('/highlight', async (req,res)=>{
     res.json(posts)
 })
 
-app.post('/upload', async(req,res)=>{
-    const {originalname,path} = req.file
-    cloudinary.uploader.upload(path).then(result=>{
-        res.json(result).status(200)
+const addBlog = (token,title,summary,tag,content)=>{
+    jwt.verify(token,secret,{}, async (err,info)=>{
+        if(err)throw err;
+            let newName
+            cloudinary.uploader.upload(path, {folder: 'uploads'}).then(result=>{
+                newName = result.public_id + '.' + result.format
+            })
+            postDoc = await Post.create({
+                title,
+                summary,
+                tag,
+                thumbnail:newName,
+                content,
+                author:info.id,
+            })
     })
+
+}
+
+app.post('/upload', upload.single('file') ,(req,res)=>{
+    if(req.file === undefined){
+        res.status(400).json('Mohon isi thumbnail')
+    }else{
+        const {originalname,path} = req.file
+        const parts = originalname.split('.')
+        const ext = parts[parts.length - 1]
+        const lowerExt = ext.toLowerCase()
+        let postDoc
+        const {token} = req.cookies
+        switch(lowerExt){
+            case 'jpg':
+            addBlog(token,title,summary,tag,path,content)
+            res.status(200).json(postDoc)
+            break;
+            case 'jpeg':
+            addBlog(token,title,summary,tag,path,content)
+            res.status(200).json(postDoc)
+            break;
+            case 'png':
+            addBlog(token,title,summary,tag,path,content)
+            res.status(200).json(postDoc)
+            break;
+            case 'webp':
+            addBlog(token,title,summary,tag,path,content)
+            res.status(200).json(postDoc)
+            break;
+            default:
+            res.status(400).json('image only')
+        }
+    }
+
+    
 })
 
 app.listen(port, ()=>{
