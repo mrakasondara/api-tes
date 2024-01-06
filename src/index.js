@@ -2,6 +2,8 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const multer = require('multer')
+const cloudinary = require('cloudinary')
+
 const app = express()
 const Post = require('../Post')
 const User = require('../User')
@@ -12,6 +14,11 @@ app.use(cors({credentials: true, origin: 'https://blog-titik-game.vercel.app'}))
 app.use(express.json())
 app.use('/uploads', express.static(__dirname + '/uploads'));
 
+cloudinary.config({
+    cloud_name:'dxs0jt3xe',
+    api_key: '531926252978129',
+    api_secret:'DuGN2Yq0sYUfzvCDnAQf9nLhIV4',
+})
 
 app.get('/get', (req,res)=>{
 	res.send('teessssssss')
@@ -45,8 +52,10 @@ app.get('/highlight', async (req,res)=>{
 })
 
 app.post('/upload', async(req,res)=>{
-    const {originalname} = req.file
-    res.json(originalname)
+    const {originalname,path} = req.file
+    cloudinary.uploader.upload(path).then(result=>{
+        res.json(result)
+    })
 })
 
 app.listen(port, ()=>{
