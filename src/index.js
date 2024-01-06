@@ -2,7 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const multer = require('multer')
-const cloudinary = require('cloudinary')
+const cloudinary = require('cloudinary').v2
 
 const app = express()
 const Post = require('../Post')
