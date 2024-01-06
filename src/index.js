@@ -119,7 +119,7 @@ const addBlog = (token,title,summary,tag,content)=>{
 
 }
 
-app.post('/upload', upload.single('file') ,(req,res)=>{
+app.post('/createpost', upload.single('file') ,(req,res)=>{
     if(req.file === undefined){
         res.status(400).json('Mohon isi thumbnail')
     }else{
