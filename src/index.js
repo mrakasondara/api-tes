@@ -2,14 +2,18 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const multer = require('multer')
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser')
 const cloudinary = require('cloudinary').v2
-
 const app = express()
 const Post = require('../Post')
 const User = require('../User')
 const port = process.env.PORT || 4000
 
 // app.use(cors({credentials: true, origin: 'https://blog-titik-game.vercel.app'}))
+const salt = bcrypt.genSaltSync(10)
+const secret = '1dhds9sdfs982snqwiqdh'
 app.use(cors({credentials: true, origin: 'http://localhost:5173'}))
 app.use(express.json())
 app.use(cookieParser())
