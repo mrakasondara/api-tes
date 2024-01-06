@@ -150,7 +150,16 @@ app.post('/createpost', upload.single('file') ,(req,res)=>{
             res.status(400).json('image only')
         }
     }
+})
 
+app.get('/detailpost/:id', async(req,res)=>{
+    const {id} = req.params
+    try{
+        const detail = await Post.findById(id).populate('author',['username'])
+        res.json(detail)
+    }catch(e){
+        res.status(404).json(e)
+    }
     
 })
 
