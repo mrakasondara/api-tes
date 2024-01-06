@@ -54,7 +54,7 @@ app.get('/highlight', async (req,res)=>{
 app.post('/upload', async(req,res)=>{
     const {originalname,path} = req.file
     cloudinary.uploader.upload(path).then(result=>{
-        res.json(result)
+        res.json(result).status(200)
     })
 })
 
