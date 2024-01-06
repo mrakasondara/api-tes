@@ -11,10 +11,10 @@ const Post = require('../Post')
 const User = require('../User')
 const port = process.env.PORT || 4000
 
-app.use(cors({credentials: true, origin: 'https://blog-titik-game.vercel.app'}))
+// app.use(cors({credentials: true, origin: 'https://blog-titik-game.vercel.app'}))
 const salt = bcrypt.genSaltSync(10)
 const secret = '1dhds9sdfs982snqwiqdh'
-// app.use(cors({credentials: true, origin: 'http://localhost:5173'}))
+app.use(cors({credentials: true, origin: 'http://localhost:5173'}))
 app.use(express.json())
 app.use(cookieParser())
 
@@ -34,8 +34,8 @@ cloudinary.config({
 
 
 app.post('/register', async (req,res)=>{
-	mongoose.connect("mongodb+srv://rakasondara21:rakasondara21@project.ezg1faq.mongodb.net/?retryWrites=true&w=majority")
-	const {fullname,username,password} = req.body
+    mongoose.connect("mongodb+srv://rakasondara21:rakasondara21@project.ezg1faq.mongodb.net/?retryWrites=true&w=majority")
+    const {fullname,username,password} = req.body
     try{
         const create = await User.create({fullname,username,password:bcrypt.hashSync(password,salt)})
         res.json(create)
@@ -87,8 +87,8 @@ app.post('/logout', (req,res)=>{
 })
 
 app.get('/post', async(req,res)=>{
-	mongoose.connect("mongodb+srv://rakasondara21:rakasondara21@project.ezg1faq.mongodb.net/?retryWrites=true&w=majority")
-	res.json(await Post.find()
+    mongoose.connect("mongodb+srv://rakasondara21:rakasondara21@project.ezg1faq.mongodb.net/?retryWrites=true&w=majority")
+    res.json(await Post.find()
         .populate('author',['username'])
         .sort({createdAt: -1})
         .limit(20))
@@ -100,7 +100,7 @@ app.get('/highlight', async (req,res)=>{
     res.json(posts)
 })
 
-const addBlog = (token,title,summary,tag,content)=>{
+const addBlog = (token,title,summary,tag,path,content)=>{
     jwt.verify(token,secret,{}, async (err,info)=>{
         if(err)throw err;
             let newName
