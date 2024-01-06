@@ -45,7 +45,7 @@ app.get('/highlight', async (req,res)=>{
 })
 
 app.post('/upload', async(req,res)=>{
-    console.log(req.file)
+    res.json(req.file)
 })
 
 app.listen(port, ()=>{
