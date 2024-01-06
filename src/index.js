@@ -44,6 +44,10 @@ app.get('/highlight', async (req,res)=>{
     res.json(posts)
 })
 
+app.post('/upload', async(req,res)=>{
+    console.log(req.file)
+})
+
 app.listen(port, ()=>{
     console.log(`App Listening on Port ${port}`)
 })
