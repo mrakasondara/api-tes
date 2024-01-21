@@ -132,7 +132,16 @@ app.post('/createpost', upload.single('file') ,(req,res)=>{
         const {token} = req.cookies
         switch(lowerExt){
             case 'jpg':
-            addBlog(token,title,summary,tag,path,content)
+            jwt.verify(token,secret,{}, async (err,info)=>{
+                if(err)throw err;
+                postDoc = await Post.create({
+                    title,
+                    summary,
+                    tag,
+                    content,
+                    author:info.id,
+                    })
+            })
             res.status(200).json(postDoc)
             break;
             case 'jpeg':
