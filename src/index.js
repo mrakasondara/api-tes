@@ -12,7 +12,6 @@ const User = require('../User')
 const port = process.env.PORT || 4000
 
 app.use(cors({credentials: true, origin: 'https://blog-titik-game.vercel.app'}))
-app.use(cors({credentials: true, origin: 'https://blog-titik-game.vercel.app/addblog'}))
 const salt = bcrypt.genSaltSync(10)
 const secret = '1dhds9sdfs982snqwiqdh'
 // app.use(cors({credentials: true, origin: 'http://localhost:5173'}))
