@@ -132,7 +132,7 @@ app.post('/createpost', upload.single('file') ,(req,res)=>{
         const {token} = req.cookies
         switch(lowerExt){
             case 'jpg':
-            addBlog(token,title,summary,content)
+            addBlog(token,title,summary,tag,path,content)
             res.status(200).json(postDoc)
             break;
             case 'jpeg':
