@@ -111,7 +111,6 @@ const addBlog = (token,title,summary,tag,path,content)=>{
                 title,
                 summary,
                 tag,
-                thumbnail:newName,
                 content,
                 author:info.id,
             })
@@ -119,65 +118,40 @@ const addBlog = (token,title,summary,tag,path,content)=>{
 
 }
 
-app.post('/createpost', (req,res)=>{
-    let postDoc
-    const {title,summary,tag,content} = req.body
-    const {token} = req.cookies
-    jwt.verify(token,secret,{}, async (err,info)=>{
-        if(err)throw err;
-        postDoc = await Post.create({
-            title,
-            summary,
-            tag,
-            content,
-            author:info.id,
-            })
-    })
-    res.status(200).json(postDoc)
-})
 
-// app.post('/createpost', upload.single('file') ,(req,res)=>{
-//     if(req.file === undefined){
-//         res.status(400).json('Mohon isi thumbnail')
-//     }else{
-//         const {originalname,path} = req.file
-//         const parts = originalname.split('.')
-//         const ext = parts[parts.length - 1]
-//         const lowerExt = ext.toLowerCase()
-//         let postDoc
-//         const {title,summary,tag,content} = req.body
-//         const {token} = req.cookies
-//         switch(lowerExt){
-//             case 'jpg':
-//             jwt.verify(token,secret,{}, async (err,info)=>{
-//                 if(err)throw err;
-//                 postDoc = await Post.create({
-//                     title,
-//                     summary,
-//                     tag,
-//                     content,
-//                     author:info.id,
-//                     })
-//             })
-//             res.status(200).json(postDoc)
-//             break;
-//             case 'jpeg':
-//             addBlog(token,title,summary,tag,path,content)
-//             res.status(200).json(postDoc)
-//             break;
-//             case 'png':
-//             addBlog(token,title,summary,tag,path,content)
-//             res.status(200).json(postDoc)
-//             break;
-//             case 'webp':
-//             addBlog(token,title,summary,tag,path,content)
-//             res.status(200).json(postDoc)
-//             break;
-//             default:
-//             res.status(400).json('image only')
-//         }
-//     }
-// })
+app.post('/createpost', upload.single('file') ,(req,res)=>{
+    if(req.file === undefined){
+        res.status(400).json('Mohon isi thumbnail')
+    }else{
+        const {originalname,path} = req.file
+        const parts = originalname.split('.')
+        const ext = parts[parts.length - 1]
+        const lowerExt = ext.toLowerCase()
+        let postDoc
+        const {title,summary,tag,content} = req.body
+        const {token} = req.cookies
+        switch(lowerExt){
+            case 'jpg':
+            addBlog(token,title,summary,content)
+            res.status(200).json(postDoc)
+            break;
+            case 'jpeg':
+            addBlog(token,title,summary,tag,path,content)
+            res.status(200).json(postDoc)
+            break;
+            case 'png':
+            addBlog(token,title,summary,tag,path,content)
+            res.status(200).json(postDoc)
+            break;
+            case 'webp':
+            addBlog(token,title,summary,tag,path,content)
+            res.status(200).json(postDoc)
+            break;
+            default:
+            res.status(400).json('image only')
+        }
+    }
+})
 
 app.get('/detailpost/:id', async(req,res)=>{
     const {id} = req.params
