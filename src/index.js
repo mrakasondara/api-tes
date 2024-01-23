@@ -11,10 +11,10 @@ const Post = require('../Post')
 const User = require('../User')
 const port = process.env.PORT || 4000
 
+app.use(cors())
 app.use(cors({credentials: true, origin: 'https://blog-titik-game.vercel.app'}))
 const salt = bcrypt.genSaltSync(10)
 const secret = '1dhds9sdfs982snqwiqdh'
-// app.use(cors({credentials: true, origin: 'http://localhost:5173'}))
 app.use(express.json())
 app.use(cookieParser())
 
@@ -52,7 +52,6 @@ app.post('/login',async (req,res)=>{
     const loginCheck = await User.findOne({username})
     if(loginCheck === null){
         res.status(400).json()
-        // console.log('user not found')
     }else{
         const passOk = bcrypt.compareSync(password,loginCheck.password)
         if(passOk){
@@ -107,6 +106,7 @@ const addBlog = (token,title,summary,tag,path,content)=>{
             cloudinary.uploader.upload(path, {folder: 'uploads'}).then(result=>{
                 newName = result.public_id + '.' + result.format
             })
+            mongoose.connect("mongodb+srv://rakasondara21:rakasondara21@project.ezg1faq.mongodb.net/?retryWrites=true&w=majority")
             postDoc = await Post.create({
                 title,
                 summary,
