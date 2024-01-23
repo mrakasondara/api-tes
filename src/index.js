@@ -15,6 +15,7 @@ app.use(cors())
 app.use(cors({credentials: true, origin: 'https://blog-titik-game.vercel.app'}))
 const salt = bcrypt.genSaltSync(10)
 const secret = '1dhds9sdfs982snqwiqdh'
+
 app.use(express.json())
 app.use(cookieParser())
 
@@ -56,7 +57,7 @@ app.post('/login',async (req,res)=>{
         const passOk = bcrypt.compareSync(password,loginCheck.password)
         if(passOk){
             jwt.sign({username, id:loginCheck._id},secret,{}, (err,token)=>{
-                if(err)throw(err)
+                if(err) throw err
                 res.cookie('token',token).json({
                     id: loginCheck._id,
                     username
@@ -74,11 +75,14 @@ app.get('/profile', (req,res)=>{
     const {token} = req.cookies
     if(token){
         jwt.verify(token,secret,{},(err,info)=>{
-            if(err)throw err
+            if(err) throw err
             res.json(info)
         } )
     }
 })
+
+
+
 
 app.post('/logout', (req,res)=>{
     res.cookie('token','').json('logout')
@@ -100,7 +104,8 @@ app.get('/highlight', async (req,res)=>{
 })
 
 const addBlog = (token,title,summary,tag,path,content)=>{
-    jwt.verify(token,secret,{}, async (err,info)=>{
+     mongoose.connect("mongodb+srv://rakasondara21:rakasondara21@project.ezg1faq.mongodb.net/?retryWrites=true&w=majority")
+      jwt.verify(token,secret,{}, async (err,info)=>{
         if(err)throw err;
             let newName
             cloudinary.uploader.upload(path, {folder: 'uploads'}).then(result=>{
@@ -111,13 +116,13 @@ const addBlog = (token,title,summary,tag,path,content)=>{
                 title,
                 summary,
                 tag,
-                thumbnail:newName,
                 content,
+                thumbnail: newName,
                 author:info.id,
             })
     })
-
 }
+
 
 app.post('/createpost', upload.single('file') ,(req,res)=>{
     if(req.file === undefined){
