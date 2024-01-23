@@ -100,7 +100,7 @@ app.get('/highlight', async (req,res)=>{
     res.json(posts)
 })
 
-const addBlog = (token,title,summary,tag,path,thumbnail,content)=>{
+const addBlog = (token,title,summary,tag,path,content)=>{
     // jwt.verify(token,secret,{}, async (err,info)=>{
     //     if(err)throw err;
     //         let newName
@@ -143,7 +143,7 @@ app.post('/createpost', upload.single('file') ,(req,res)=>{
         const {token} = req.cookies
         switch(lowerExt){
             case 'jpg':
-            addBlog(token,title,summary,tag,path,thumbnail,content)
+            addBlog(token,title,summary,tag,path,content)
             res.status(200).json(postDoc)
             break;
             case 'jpeg':
