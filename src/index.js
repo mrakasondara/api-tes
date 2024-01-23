@@ -112,6 +112,7 @@ const addBlog = (token,title,summary,tag,path,content)=>{
                 summary,
                 tag,
                 content,
+                thumbnail: newName,
                 author:info.id,
             })
     })
