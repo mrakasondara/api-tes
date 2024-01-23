@@ -100,10 +100,22 @@ app.get('/highlight', async (req,res)=>{
     res.json(posts)
 })
 
-const addBlog = (token,title,summary,tag,path,content)=>{
-    jwt.verify(token,secret,{}, async (err,info)=>{
-        if(err)throw err;
-            let newName
+const addBlog = (token,title,summary,tag,path,thumbnail,content)=>{
+    // jwt.verify(token,secret,{}, async (err,info)=>{
+    //     if(err)throw err;
+    //         let newName
+    //         cloudinary.uploader.upload(path, {folder: 'uploads'}).then(result=>{
+    //             newName = result.public_id + '.' + result.format
+    //         })
+    //         postDoc = await Post.create({
+    //             title,
+    //             summary,
+    //             tag,
+    //             content,
+    //             author:info.id,
+    //         })
+    // })
+        let newName
             cloudinary.uploader.upload(path, {folder: 'uploads'}).then(result=>{
                 newName = result.public_id + '.' + result.format
             })
@@ -112,10 +124,9 @@ const addBlog = (token,title,summary,tag,path,content)=>{
                 summary,
                 tag,
                 content,
+                thumbnail: newName,
                 author:info.id,
             })
-    })
-
 }
 
 
@@ -132,7 +143,7 @@ app.post('/createpost', upload.single('file') ,(req,res)=>{
         const {token} = req.cookies
         switch(lowerExt){
             case 'jpg':
-            addBlog(token,title,summary,tag,path,content)
+            addBlog(token,title,summary,tag,path,thumbnail,content)
             res.status(200).json(postDoc)
             break;
             case 'jpeg':
