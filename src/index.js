@@ -101,21 +101,7 @@ app.get('/highlight', async (req,res)=>{
 })
 
 const addBlog = (token,title,summary,tag,path,content)=>{
-    // jwt.verify(token,secret,{}, async (err,info)=>{
-    //     if(err)throw err;
-    //         let newName
-    //         cloudinary.uploader.upload(path, {folder: 'uploads'}).then(result=>{
-    //             newName = result.public_id + '.' + result.format
-    //         })
-    //         postDoc = await Post.create({
-    //             title,
-    //             summary,
-    //             tag,
-    //             content,
-    //             author:info.id,
-    //         })
-    // })
-        let newName
+    let newName
             cloudinary.uploader.upload(path, {folder: 'uploads'}).then(result=>{
                 newName = result.public_id + '.' + result.format
             })
