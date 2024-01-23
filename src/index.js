@@ -106,6 +106,7 @@ app.get('/highlight', async (req,res)=>{
 })
 
 const addBlog = (token,title,summary,tag,path,content)=>{
+     mongoose.connect("mongodb+srv://rakasondara21:rakasondara21@project.ezg1faq.mongodb.net/?retryWrites=true&w=majority")
       jwt.verify(token,secret,{}, async (err,info)=>{
         if(err)throw err;
             let newName
