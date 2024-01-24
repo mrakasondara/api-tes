@@ -72,12 +72,15 @@ app.post('/login',async (req,res)=>{
 
 app.get('/profile', (req,res)=>{
     const {token} = req.cookies
-    if(token){
-        jwt.verify(token,secret,{},(err,info)=>{
-            if(err) throw err
-            res.json(info)
-        } )
-    }
+    // if(token){
+    //     jwt.verify(token,secret,{},(err,info)=>{
+    //         if(err) throw err
+    //         res.json(info)
+    //     } )
+    // }
+    console.log(req.cookies)
+    console.log(token)
+
 })
 
 
@@ -166,6 +169,18 @@ app.get('/detailpost/:id', async(req,res)=>{
         res.status(404).json(e)
     }
     
+})
+
+app.get('/tag/:tagParams', async(req,res)=>{
+    const {tagParams} = req.params
+    try{
+        const tagResult = await Post.find({tag: tagParams})
+        .populate('author', ['username'])
+        .sort({createdAt: -1})
+        res.json(tagResult)
+    }catch(e){
+        res.status(404).json(e)
+    }
 })
 
 app.listen(port, ()=>{
