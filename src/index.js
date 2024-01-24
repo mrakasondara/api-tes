@@ -72,14 +72,14 @@ app.post('/login',async (req,res)=>{
 
 app.get('/profile', (req,res)=>{
     const {token} = req.cookies
-    if(token){
+    // if(token){
         jwt.verify(token,secret,{},(err,info)=>{
             if(err) throw err
             res.json(info)
         } )
-    }else{
-        res.json('no session').status(200)
-    }
+    // }else{
+    //     res.json('no session').status(200)
+    // }
 
 })
 
