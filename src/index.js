@@ -77,8 +77,9 @@ app.get('/profile', (req,res)=>{
             if(err) throw err
             res.json(info)
         } )
+    }else{
+        res.json('no session').status(200)
     }
-    res.json('token').status(200)
 
 })
 
