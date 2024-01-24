@@ -78,7 +78,7 @@ app.get('/profile', (req,res)=>{
     //         res.json(info)
     //     } )
     // }
-    console.log('token')
+    res.json('token').status(200)
 
 })
 
@@ -175,10 +175,9 @@ app.get('/tag/:tagParams', async(req,res)=>{
     mongoose.connect("mongodb+srv://rakasondara21:rakasondara21@project.ezg1faq.mongodb.net/?retryWrites=true&w=majority")
 
     try{
-        const tagResult = await Post.find({tag: tagParams})
+        res.json(await Post.find({tag: tagParams})
         .populate('author', ['username'])
-        .sort({createdAt: -1})
-        res.json(tagResult)
+        .sort({createdAt: -1}))
     }catch(e){
         res.status(404).json(e)
     }
