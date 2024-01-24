@@ -71,15 +71,14 @@ app.post('/login',async (req,res)=>{
 
 
 app.get('/profile', (req,res)=>{
-    const {token} = req.cookies
+    // const {token} = req.cookies
     // if(token){
     //     jwt.verify(token,secret,{},(err,info)=>{
     //         if(err) throw err
     //         res.json(info)
     //     } )
     // }
-    console.log(req.cookies)
-    console.log(token)
+    console.log('token')
 
 })
 
@@ -173,6 +172,8 @@ app.get('/detailpost/:id', async(req,res)=>{
 
 app.get('/tag/:tagParams', async(req,res)=>{
     const {tagParams} = req.params
+    mongoose.connect("mongodb+srv://rakasondara21:rakasondara21@project.ezg1faq.mongodb.net/?retryWrites=true&w=majority")
+
     try{
         const tagResult = await Post.find({tag: tagParams})
         .populate('author', ['username'])
