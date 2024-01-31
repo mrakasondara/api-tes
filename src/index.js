@@ -106,58 +106,72 @@ app.get('/highlight', async (req,res)=>{
     res.json(posts)
 })
 
-const addBlog = (token,title,summary,tag,path,content)=>{
-     mongoose.connect("mongodb+srv://rakasondara21:rakasondara21@project.ezg1faq.mongodb.net/?retryWrites=true&w=majority")
-      jwt.verify(token,secret,{}, async (err,info)=>{
-        if(err)throw err;
-            let newName
-            cloudinary.uploader.upload(path, {folder: 'uploads'}).then(result=>{
-                newName = result.public_id + '.' + result.format
-            })
-            mongoose.connect("mongodb+srv://rakasondara21:rakasondara21@project.ezg1faq.mongodb.net/?retryWrites=true&w=majority")
-            postDoc = await Post.create({
-                title,
-                summary,
-                tag,
-                content,
-                thumbnail: newName,
-                author:info.id,
-            })
-    })
-}
-
-
-app.post('/createpost', upload.single('file') ,(req,res)=>{
+app.post('/createpost', upload.single('file'), async (req,res)=>{
     if(req.file === undefined){
-        res.status(400).json('Mohon isi thumbnail')
+        res.status(400).json('fill the thumbnail')
     }else{
         const {originalname,path} = req.file
         const parts = originalname.split('.')
         const ext = parts[parts.length - 1]
         const lowerExt = ext.toLowerCase()
-        let postDoc
-        const {title,summary,tag,content} = req.body
+        let postDoc, result
         const {token} = req.cookies
-        switch(lowerExt){
+        const {title,summary,tag,content} = req.body
+        jwt.verify(token,secret,{}, async (err,info)=>{
+            if(err)throw err;
+            switch(lowerExt){
             case 'jpg':
-            addBlog(token,title,summary,tag,path,content)
+                result = await cloudinary.uploader.upload(path, {folder: 'uploads'})
+                postDoc =  await Post.create({
+                    title,
+                    summary,
+                    tag,
+                    thumbnail: result.public_id+ '.' + result.format,
+                    content,
+                    author:info.id,
+                })
             res.status(200).json(postDoc)
             break;
             case 'jpeg':
-            addBlog(token,title,summary,tag,path,content)
+                result = await cloudinary.uploader.upload(path, {folder: 'uploads'})
+                postDoc =  await Post.create({
+                    title,
+                    summary,
+                    tag,
+                    thumbnail: result.public_id+ '.' + result.format,
+                    content,
+                    author:info.id,
+                })
             res.status(200).json(postDoc)
             break;
             case 'png':
-            addBlog(token,title,summary,tag,path,content)
+                result = await cloudinary.uploader.upload(path, {folder: 'uploads'})
+                postDoc =  await Post.create({
+                    title,
+                    summary,
+                    tag,
+                    thumbnail: result.public_id+ '.' + result.format,
+                    content,
+                    author:info.id,
+                })
             res.status(200).json(postDoc)
             break;
             case 'webp':
-            addBlog(token,title,summary,tag,path,content)
+                result = await cloudinary.uploader.upload(path, {folder: 'uploads'})
+                postDoc =  await Post.create({
+                    title,
+                    summary,
+                    tag,
+                    thumbnail: result.public_id+ '.' + result.format,
+                    content,
+                    author:info.id,
+                })
             res.status(200).json(postDoc)
             break;
             default:
             res.status(400).json('image only')
-        }
+            }
+        })
     }
 })
 
@@ -175,7 +189,6 @@ app.get('/detailpost/:id', async(req,res)=>{
 app.get('/tag/:tagParams', async(req,res)=>{
     const {tagParams} = req.params
     mongoose.connect("mongodb+srv://rakasondara21:rakasondara21@project.ezg1faq.mongodb.net/?retryWrites=true&w=majority")
-
     try{
         res.json(await Post.find({tag: tagParams})
         .populate('author', ['username'])
@@ -185,6 +198,22 @@ app.get('/tag/:tagParams', async(req,res)=>{
     }
 })
 
+app.get('/search/:query', async(req,res)=>{
+    const {query} = req.params
+ 
+    mongoose.connect("mongodb+srv://rakasondara21:rakasondara21@project.ezg1faq.mongodb.net/?retryWrites=true&w=majority")
+    try{
+        const searchByTitle = await Post.find({ title: { $regex: query, $options: "i" } }).populate('author', ['username']) 
+        const searchBySummary = await Post.find({ summary: { $regex: query, $options: "i" } }).populate('author', ['username']) 
+        const removeDuplicate = Object.assign(searchByTitle,searchBySummary)
+        res.json(removeDuplicate)
+
+    }catch(e){
+        res.json('result not found').status(404)
+    }
+    
+
+})
 app.listen(port, ()=>{
     console.log(`App Listening on Port ${port}`)
 })
