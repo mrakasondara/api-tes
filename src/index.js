@@ -75,7 +75,9 @@ app.get('/profile', (req,res)=>{
     if(token){
         jwt.verify(token,secret,{},(err,info)=>{
             if(err)throw err
-            res.header("Access-Control-Allow-Origin", "https://blog-titik-game.vercel.app")
+            res.setHeader("Access-Control-Allow-Origin", "https://blog-titik-game.vercel.app")
+            res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE');
+            res.setHeader('Access-Control-Allow-Methods','Content-Type','Authorization');
             res.json(info)
         } )
     }
@@ -128,7 +130,9 @@ app.post('/createpost', upload.single('file'), async (req,res)=>{
                     content,
                     author:info.id,
                 })
-            res.header("Access-Control-Allow-Origin", "https://blog-titik-game.vercel.app")
+            res.setHeader("Access-Control-Allow-Origin", "https://blog-titik-game.vercel.app")
+            res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE');
+    res.setHeader('Access-Control-Allow-Methods','Content-Type','Authorization');
             res.status(200).json(postDoc)
             break;
             case 'jpeg':
@@ -141,7 +145,9 @@ app.post('/createpost', upload.single('file'), async (req,res)=>{
                     content,
                     author:info.id,
                 })
-            res.header("Access-Control-Allow-Origin", "https://blog-titik-game.vercel.app")
+            res.setHeader("Access-Control-Allow-Origin", "https://blog-titik-game.vercel.app")
+            res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE');
+    res.setHeader('Access-Control-Allow-Methods','Content-Type','Authorization');
             res.status(200).json(postDoc)
             break;
             case 'png':
@@ -154,7 +160,9 @@ app.post('/createpost', upload.single('file'), async (req,res)=>{
                     content,
                     author:info.id,
                 })
-            res.header("Access-Control-Allow-Origin", "https://blog-titik-game.vercel.app")
+            res.setHeader("Access-Control-Allow-Origin", "https://blog-titik-game.vercel.app")
+            res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE');
+    res.setHeader('Access-Control-Allow-Methods','Content-Type','Authorization');
             res.status(200).json(postDoc)
             break;
             case 'webp':
@@ -167,7 +175,9 @@ app.post('/createpost', upload.single('file'), async (req,res)=>{
                     content,
                     author:info.id,
                 })
-            res.header("Access-Control-Allow-Origin", "https://blog-titik-game.vercel.app")
+            res.setHeader("Access-Control-Allow-Origin", "https://blog-titik-game.vercel.app")
+            res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE');
+    res.setHeader('Access-Control-Allow-Methods','Content-Type','Authorization');
             res.status(200).json(postDoc)
             break;
             default:
